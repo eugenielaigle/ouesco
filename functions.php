@@ -122,12 +122,71 @@ add_action( 'widgets_init', 'ouesco_widgets_init' );
  */
 function ouesco_scripts() {
 	// wp_enqueue_style( 'ouesco-style', get_stylesheet_uri() );
-
 	// style.min.css
 	wp_register_style('scss-style', get_template_directory_uri().'/assets/css/style.min.css', array());
 	wp_enqueue_style('scss-style');
 
-	wp_enqueue_script( 'ouesco-navigation', get_template_directory_uri() . '/assets/js/navigation.js', array(), '20151215', true );
+	wp_register_style('normalize-style', get_template_directory_uri().'/assets/js/scrollmagic/css/normalize.css', array());
+
+	wp_register_style('css-style', get_template_directory_uri().'/assets/js/scrollmagic/css/style.css', array());
+
+
+	wp_enqueue_script( 'ouesco-navigation', get_template_directory_uri() . '/assets/js/navigation.js', array('jquery'), '1.7', true );
+
+	wp_enqueue_script( 'jq-script', get_template_directory_uri() . '/assets/js/scrollmagic/js/lib/jquery.min.js', array(), true );
+
+	wp_enqueue_script( 'highlight-script', get_template_directory_uri() . '/assets/js/scrollmagic/js/lib/highlight.pack.js', array('jquery'), '1', true );
+
+	wp_enqueue_script( 'modernizr-script', get_template_directory_uri() . '/assets/js/scrollmagic/js/lib/modernizr.custom.min.js', array('jquery'), '1', true );
+
+	wp_enqueue_script( 'example-script', get_template_directory_uri() . '/assets/js/scrollmagic/js/examples.js', array('jquery'), '1', true );
+
+
+	wp_enqueue_script( 'tween-script', get_template_directory_uri() . '/assets/js/scrollmagic/js/lib/greensock/TweenMax.min.js', array('jquery'), '1', true );
+
+
+	wp_enqueue_script( 'scroll-script', get_template_directory_uri() . '/assets/js/scrollmagic/scrollmagic/uncompressed/ScrollMagic.js', array('jquery'), '1', true );
+
+	wp_enqueue_script( 'gsap-script', get_template_directory_uri() . '/assets/js/scrollmagic/scrollmagic/uncompressed/plugins/animation.gsap.js', array('jquery'), '1', true );
+
+	// wp_enqueue_script( 'debug-script', get_template_directory_uri() . '/assets/js/scrollmagic/scrollmagic/uncompressed/plugins/debug.addIndicators.js', array('jquery'), '1', true );
+
+		wp_enqueue_script( 'slickjs', get_stylesheet_directory_uri() . '/assets/js/slick/slick/slick.min.js', array( 'jquery' ), '1.6.0', true );
+	wp_enqueue_script( 'slick', get_stylesheet_directory_uri(). '/assets/js/slick.js', array( 'slickjs' ), '1.6.0', true );
+	wp_enqueue_style( 'slickcss', get_stylesheet_directory_uri() . '/assets/js/slick/slick/slick.css', '1.6.0', 'all');
+	wp_enqueue_style( 'slickcsstheme', get_stylesheet_directory_uri(). '/assets/js/slick/slick/slick-theme.css', '1.6.0', 'all');
+
+
+
+
+
+	wp_enqueue_script( 'tracking-script', get_template_directory_uri() . '/assets/js/scrollmagic/js/tracking.js', array('jquery'), '1', false );
+
+	wp_enqueue_script( 'script', get_template_directory_uri() . '/assets/js/script.js', array('jquery'), '1.0', true );
+
+	if(is_page(236)){
+		wp_enqueue_script( 'actions', get_template_directory_uri() . '/assets/js/actions.js', array('jquery'), '1.0', true );
+	}
+
+	if(is_page(12)){
+		wp_enqueue_script( 'sage', get_template_directory_uri() . '/assets/js/sage.js', array('jquery'), '1.0', true );
+	}
+
+	if(is_page(91)){
+		wp_enqueue_script( 'qualite', get_template_directory_uri() . '/assets/js/qualite.js', array('jquery'), '1.0', true );
+	}
+
+	if(is_page(8)){
+		wp_enqueue_script( 'territoire', get_template_directory_uri() . '/assets/js/territoire.js', array('jquery'), '1.0', true );
+	}
+
+	if( is_post_type_archive('documentsofficiels') ){
+		wp_enqueue_script( 'documentation', get_template_directory_uri() . '/assets/js/documentation.js', array('jquery'), '1.0', true );
+	}
+
+		if(is_front_page()){
+		wp_enqueue_script( 'home', get_template_directory_uri() . '/assets/js/home.js', array('jquery'), '1.0', true );
+	}
 
 	wp_enqueue_script( 'ouesco-skip-link-focus-fix', get_template_directory_uri() . '/assets/js/skip-link-focus-fix.js', array(), '20151215', true );
 
@@ -169,78 +228,30 @@ if ( defined( 'JETPACK__VERSION' ) ) {
 
 // MASQUER LES ARTICLES DANS LE MENU WORDPRESS
 function remove_menu_items() {
-  global $menu;
-  $restricted = array(__('Posts'), __('Comments'));
-  end ($menu);
-  while (prev($menu)){
-    $value = explode(' ',$menu[key($menu)][0]);
-    if(in_array($value[0] != NULL?$value[0]:"" , $restricted)){
-      unset($menu[key($menu)]);}
-    }
-  }
+	global $menu;
+	$restricted = array(__('Posts'), __('Comments'));
+	end ($menu);
+	while (prev($menu)){
+		$value = explode(' ',$menu[key($menu)][0]);
+		if(in_array($value[0] != NULL?$value[0]:"" , $restricted)){
+			unset($menu[key($menu)]);}
+		}
+	}
 
-add_action('admin_menu', 'remove_menu_items');
+	add_action('admin_menu', 'remove_menu_items');
 
 
-// CUSTOM POST UI
-function cptui_register_my_cpts() {
+// CUSTOM POSTS
+	function cptui_register_my_cpts() {
 
 	/**
-	 * Post Type: actions.
+	 * Post Type: documentation.
 	 */
 
 	$labels = array(
-		"name" => __( "actions", "ouesco" ),
-		"singular_name" => __( "action", "ouesco" ),
-		"menu_name" => __( "Actions", "ouesco" ),
-		"all_items" => __( "Toutes les actions", "ouesco" ),
-		"add_new" => __( "Ajouter", "ouesco" ),
-		"add_new_item" => __( "Ajouter une nouvelle action", "ouesco" ),
-		"edit_item" => __( "Modifier une action", "ouesco" ),
-		"new_item" => __( "Nouvelle action", "ouesco" ),
-		"view_item" => __( "Voir l'action", "ouesco" ),
-		"view_items" => __( "Voir les actions", "ouesco" ),
-		"search_items" => __( "Rechercher une action", "ouesco" ),
-		"not_found" => __( "Pas d'actions trouvées", "ouesco" ),
-		"not_found_in_trash" => __( "Pas d'actions trouvées dans la corbeille", "ouesco" ),
-		"featured_image" => __( "Image à la une Action", "ouesco" ),
-		"set_featured_image" => __( "Modifier l'image à la une", "ouesco" ),
-		"remove_featured_image" => __( "Supprimer", "ouesco" ),
-		"use_featured_image" => __( "Utiliser", "ouesco" ),
-		"items_list" => __( "Liste des actions", "ouesco" ),
-	);
-
-	$args = array(
-		"label" => __( "actions", "ouesco" ),
-		"labels" => $labels,
-		"description" => "",
-		"public" => true,
-		"publicly_queryable" => true,
-		"show_ui" => true,
-		"show_in_rest" => false,
-		"rest_base" => "",
-		"has_archive" => "actions",
-		"show_in_menu" => true,
-		"show_in_nav_menus" => true,
-		"exclude_from_search" => false,
-		"capability_type" => "post",
-		"map_meta_cap" => true,
-		"hierarchical" => false,
-		"rewrite" => array( "slug" => "actions", "with_front" => true ),
-		"query_var" => true,
-		"supports" => array( "title", "thumbnail", "custom-fields" ),
-	);
-
-	register_post_type( "actions", $args );
-
-	/**
-	 * Post Type: documents officiels.
-	 */
-
-	$labels = array(
-		"name" => __( "documents officiels", "ouesco" ),
-		"singular_name" => __( "fond documentaire", "ouesco" ),
-		"menu_name" => __( "Fond documentaire", "ouesco" ),
+		"name" => __( "documentation", "ouesco" ),
+		"singular_name" => __( "documentation", "ouesco" ),
+		"menu_name" => __( "Documentation", "ouesco" ),
 		"all_items" => __( "Tous les documents", "ouesco" ),
 		"add_new" => __( "Ajouter un nouveau", "ouesco" ),
 		"add_new_item" => __( "Ajouter un document", "ouesco" ),
@@ -259,7 +270,7 @@ function cptui_register_my_cpts() {
 	);
 
 	$args = array(
-		"label" => __( "documents officiels", "ouesco" ),
+		"label" => __( "documentation", "ouesco" ),
 		"labels" => $labels,
 		"description" => "",
 		"public" => true,
@@ -267,20 +278,89 @@ function cptui_register_my_cpts() {
 		"show_ui" => true,
 		"show_in_rest" => false,
 		"rest_base" => "",
-		"has_archive" => "docs",
+		"has_archive" => "documentsofficiels",
 		"show_in_menu" => true,
 		"show_in_nav_menus" => true,
 		"exclude_from_search" => false,
 		"capability_type" => "post",
 		"map_meta_cap" => true,
 		"hierarchical" => false,
-		"rewrite" => array( "slug" => "fond_documentaire", "with_front" => true ),
+		"rewrite" => array( "slug" => "documentsofficiels", "with_front" => true ),
 		"query_var" => true,
-		"supports" => array( "title", "thumbnail", "custom-fields" ),
+		"supports" => array( "title", "thumbnail" ),
+		"taxonomies" => array( "categories_documentation" ),
 	);
 
-	register_post_type( "fond_documentaire", $args );
+	register_post_type( "documentsofficiels", $args );
 }
 
 add_action( 'init', 'cptui_register_my_cpts' );
+
+
+// CUSTOM TAXONOMIES
+function cptui_register_my_taxes() {
+
+	/**
+	 * Taxonomy: categories.
+	 */
+
+	$labels = array(
+		"name" => __( "categories", "ouesco" ),
+		"singular_name" => __( "categorie", "ouesco" ),
+		"menu_name" => __( "Catégories", "ouesco" ),
+		"all_items" => __( "Toutes les catégories", "ouesco" ),
+		"edit_item" => __( "Modifier une catégorie", "ouesco" ),
+		"view_item" => __( "Voir la catégorie", "ouesco" ),
+		"update_item" => __( "Modifier", "ouesco" ),
+		"add_new_item" => __( "Ajouter nouvelle catégorie", "ouesco" ),
+		"new_item_name" => __( "Nouveau", "ouesco" ),
+		"parent_item" => __( "Catégorie parent", "ouesco" ),
+		"parent_item_colon" => __( "Catégorie parent", "ouesco" ),
+		"search_items" => __( "Rechercher une catégorie", "ouesco" ),
+		"separate_items_with_commas" => __( "séparer les catégories par des virgules", "ouesco" ),
+		"not_found" => __( "Aucune catégorie trouvée", "ouesco" ),
+		"no_terms" => __( "Pas de catégorie", "ouesco" ),
+		"items_list" => __( "Liste des catégories", "ouesco" ),
+	);
+
+	$args = array(
+		"label" => __( "categories", "ouesco" ),
+		"labels" => $labels,
+		"public" => true,
+		"hierarchical" => true,
+		"label" => "categories",
+		"show_ui" => true,
+		"show_in_menu" => true,
+		"show_in_nav_menus" => true,
+		"query_var" => true,
+		"rewrite" => array( 'slug' => 'categories_documentation', 'with_front' => true, ),
+		"show_admin_column" => true,
+		"show_in_rest" => false,
+		"rest_base" => "categories_documentation",
+		"show_in_quick_edit" => false,
+	);
+	register_taxonomy( "categories_documentation", array( "documentsofficiels" ), $args );
+}
+
+add_action( 'init', 'cptui_register_my_taxes' );
+
+
+/**
+ * Ajouter une colonne de catégorie
+ */
+function jst_manage_cpt_posts_columns( $cols )
+{
+	// Récupération du type de post courant et des taxonomies liées au CPT
+	$post_type = get_current_screen()->post_type;
+	$taxonomies = get_object_taxonomies( $post_type );
+	foreach( $taxonomies as $tax_id )
+	{
+		// Récupération de l’objet WP_Taxonomy
+		$tax = get_taxonomy( $tax_id );
+		// Ajout d’une colonne par définition de l’ attribut id de son en-tête
+		$cols[ 'taxonomy-' . $tax_id ] = $tax->label;
+	}
+	return $cols;
+}
+
 

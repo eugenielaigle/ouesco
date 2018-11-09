@@ -53,9 +53,9 @@ gulp.task('compress', function (cb) {
 
 //images
 gulp.task('minimage', () =>
-    gulp.src('./src/img/*')
+    gulp.src('./src/images/*')
     .pipe(imagemin())
-    .pipe(gulp.dest('./assets/img'))
+    .pipe(gulp.dest('./assets/images'))
     );
 
 // dès qu'on écrit gulp dans la ligne de commande, il exécute la fonction sass et cssnano

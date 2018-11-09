@@ -10,43 +10,57 @@
 ?>
 
 <article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
+
+	<!-- IMAGE DE COUV -->
 	<header class="entry-header">
-		<?php the_title( '<h1 class="entry-title">', '</h1>' ); ?>
+
 	</header><!-- .entry-header -->
 
-	<?php ouesco_post_thumbnail(); ?>
-
+	<!-- CONTENT FLEXIBLE -->
 	<div class="entry-content">
-		<?php
-		the_content();
+		<div id="pinContainer">
 
-		wp_link_pages( array(
-			'before' => '<div class="page-links">' . esc_html__( 'Pages:', 'ouesco' ),
-			'after'  => '</div>',
-		) );
-		?>
+			<?php if( have_rows('contenu_flexible') ):
+				while ( have_rows('contenu_flexible') ) : the_row();
+
+					if( get_row_layout() == 'image_de_couv' ):
+						get_template_part( 'flexible/couv');
+
+					elseif( get_row_layout() == 'panoramique' ):
+						get_template_part( 'flexible/panoramique');
+
+					elseif( get_row_layout() == 'map' ):
+						get_template_part( 'flexible/map');
+
+					elseif( get_row_layout() == 'chapeau' ):
+						get_template_part( 'flexible/chapeau');
+
+					elseif( get_row_layout() == 'chapeau-methode-numero' ):
+						get_template_part( 'flexible/chapeau-methode');
+
+					elseif( get_row_layout() == 'articles_avec_image' ):
+						get_template_part( 'flexible/article-avec-image');
+
+					elseif( get_row_layout() == 'methode_avec_numero' ):
+						get_template_part( 'flexible/methode-avec-numero');
+
+					elseif( get_row_layout() == 'articles_par_categorie' ):
+						get_template_part( 'flexible/article-par-categorie');
+
+					elseif( get_row_layout() == 'graphique' ):
+						get_template_part( 'flexible/graphique');
+
+					elseif( get_row_layout() == 'titre_cat_actions' ):
+
+					elseif( get_row_layout() == 'home_partie_2' ):
+						get_template_part( 'flexible/home-part2');
+
+					endif;
+
+				endwhile;
+			else :
+			endif; ?>
+		</div>
 	</div><!-- .entry-content -->
 
-	<?php if ( get_edit_post_link() ) : ?>
-		<footer class="entry-footer">
-			<?php
-			edit_post_link(
-				sprintf(
-					wp_kses(
-						/* translators: %s: Name of current post. Only visible to screen readers */
-						__( 'Edit <span class="screen-reader-text">%s</span>', 'ouesco' ),
-						array(
-							'span' => array(
-								'class' => array(),
-							),
-						)
-					),
-					get_the_title()
-				),
-				'<span class="edit-link">',
-				'</span>'
-			);
-			?>
-		</footer><!-- .entry-footer -->
-	<?php endif; ?>
 </article><!-- #post-<?php the_ID(); ?> -->

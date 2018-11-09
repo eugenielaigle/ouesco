@@ -35,10 +35,22 @@
 			container.className = container.className.replace( ' toggled', '' );
 			button.setAttribute( 'aria-expanded', 'false' );
 			menu.setAttribute( 'aria-expanded', 'false' );
+			jQuery('.menu-header').animate({
+				'left' : '-130vw'
+			}, 500);
+
+			jQuery('.close').css('display','none');
+			jQuery('.open').css('display','block');
+
 		} else {
 			container.className += ' toggled';
 			button.setAttribute( 'aria-expanded', 'true' );
 			menu.setAttribute( 'aria-expanded', 'true' );
+			jQuery('.menu-header').animate({
+				'left' : '0'
+			}, 500);
+			jQuery('.open').css('display','none');
+			jQuery('.close').css('display','block');
 		}
 	};
 
